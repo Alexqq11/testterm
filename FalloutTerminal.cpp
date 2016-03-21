@@ -250,25 +250,24 @@ void StartNewScreenNodelayFalse(){
         attron(COLOR_PAIR(1));
     }
 }
+char * GenerateHoldBracketsString(int BIGSTRING_SIZE){ // rename it GenBinTrash 
+    char * bigString = (char *)malloc(BIGSTRING_SIZE * sizeof(char) + 1); // keep attention with +1;
+    char randValues[] = "!@#$^*()_-=+\\|/[]{}?\"\':;,.<>";
+    int i;
+    for(i=0; i<BIGSTRING_SIZE; i++){
+        /* Fill bigString with random values */
+        bigString[i] = randValues[rand()%29];
+    }
+    bigString[BIGSTRING_SIZE] = '\0'; 
+    return bigString;
+}
+
 void pass(){
     static const int BIGSTRING_SIZE = 408;
 
 
     /* Start a new screen where nodelay is false */
     StartNewScreenNodelayFalse();
-    /*erase();
-    endwin();
-    initscr();
-    noecho();
-    refresh();
-    attron(A_BOLD);
-    nodelay(stdscr, 0);
-    if(has_colors() == 1){
-        // Colors
-        start_color();
-        init_pair(1,COLOR_GREEN,COLOR_BLACK);
-        attron(COLOR_PAIR(1));
-    }*/
     
     /* Intro text */
     printPasswordScreenIntro();
@@ -276,17 +275,11 @@ void pass(){
     /* Generate the hex values on the left sides */
     int arbHex;
     arbHex = (rand() % 200) + 63744;
-    
+
+
+ 
     /* Generate the string to hold the bracket tricks and words */
-    char bigString [BIGSTRING_SIZE];
-    char randValues[] = "!@#$%^*()_-=+\\|/[]{}?\"\':;,.<>";
-    int i;
-    for(i=0; i<BIGSTRING_SIZE; i++){
-        /* Fill bigString with random values */
-        bigString[i] = randValues[rand()%29];
-    }
-    
-    
+    char * bigString  = GenerateHoldBracketsString(BIGSTRING_SIZE);
 
     /* Words from http://www-01.sil.org/linguistics/wordlists/english/wordlist/wordsEn.txt */
     char filename[] = "passwords5.txt"; 
@@ -294,9 +287,7 @@ void pass(){
     int WORD_SIZE = 5;
     char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
     static const int WORDS_CHOSEN = 15; 
-    //file_write_module passwordList, WORD_POOL_SIZE);
-    //char** passwordList = PasswordFileReader("passwords5");
-
+    int i;//attention
     /* Place a word in the string total times, making sure it doesn't 
        overwrite another word or get placed right next to it */
     int place;                      /* Current place for checking and word insertion*/
@@ -306,8 +297,8 @@ void pass(){
     int pickedWord = 0;             /* Indicate whether or not we've chosen the correct word */
     int left = WORDS_CHOSEN;        /* # of words that still need to be chosen */
     char correctWord[WORD_SIZE];    /* the correct word */
-    while(left>0){  
-        valid = 1;
+    while(left>0){ // used: valid n , BIGSTRING_SIZE , WORD SIZE , plase n 
+        valid = 1; 
         
         /* Choose a random place in bigString */
         place = rand()%(BIGSTRING_SIZE-WORD_SIZE);
@@ -335,7 +326,7 @@ void pass(){
                 /* Add the word to bigString */
                 for(i=place; i<place+WORD_SIZE; i++){
                     bigString[i] = passwordList[wordLoc][i-place];
-                    /* If this is the first word chosen, it is the correct word. */
+                    /* If this is the first word chosen, it is the correct word. */ 
                     if(!pickedWord)
                         correctWord[i-place] = passwordList[wordLoc][i-place];
                 }
@@ -447,7 +438,7 @@ void pass(){
         }
         if(needsClearingMultiLine){
             charCounter = 0;
-            int timesDown = 0;
+            //int timesDown = 0;
             while(charCounter!=wordLength){
                 currentChar[charCounter] = mvinch(starty,startx);
                 mvprintw(starty,startx,"%c",currentChar[charCounter]);
