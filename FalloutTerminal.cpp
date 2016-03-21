@@ -234,11 +234,8 @@ void printPasswordScreenIntro(){
     char prompt3[] = "4 ATTEMPT(S) LEFT: * * * *";
     passPrint(prompt3, sizeof(prompt3), 3);
     }
-void pass(){
-    static const int BIGSTRING_SIZE = 408;
 
-
-    /* Start a new screen where nodelay is false */
+void StartNewScreenNodelayFalse(){
     erase();
     endwin();
     initscr();
@@ -252,6 +249,26 @@ void pass(){
         init_pair(1,COLOR_GREEN,COLOR_BLACK);
         attron(COLOR_PAIR(1));
     }
+}
+void pass(){
+    static const int BIGSTRING_SIZE = 408;
+
+
+    /* Start a new screen where nodelay is false */
+    StartNewScreenNodelayFalse();
+    /*erase();
+    endwin();
+    initscr();
+    noecho();
+    refresh();
+    attron(A_BOLD);
+    nodelay(stdscr, 0);
+    if(has_colors() == 1){
+        // Colors
+        start_color();
+        init_pair(1,COLOR_GREEN,COLOR_BLACK);
+        attron(COLOR_PAIR(1));
+    }*/
     
     /* Intro text */
     printPasswordScreenIntro();
