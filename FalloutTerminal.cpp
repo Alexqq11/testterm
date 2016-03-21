@@ -194,7 +194,7 @@ long LinesAmount(char * buffer , long length){
         return linesAmount;
     }
 
-char **  ReadPasswords(char * filename, int * len){
+char **  ReadPasswordsFromFile(char * filename, int * len){
     FILE* f;
     f = fopen(filename, "r");   /*if (!f){  printf("failed to open file"); exit(42); }*/
     fseek(f, 0, SEEK_END);// length of file
@@ -224,8 +224,16 @@ char **  ReadPasswords(char * filename, int * len){
     *len = currentLine;
     free(buffer);
     return lines;
-}
+    }
 
+void printPasswordScreenIntro(){
+    char prompt[] = "ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL";
+    passPrint(prompt,sizeof(prompt),0);
+    char prompt2[] = "ENTER PASSWORD NOW";
+    passPrint(prompt2, sizeof(prompt2), 1);
+    char prompt3[] = "4 ATTEMPT(S) LEFT: * * * *";
+    passPrint(prompt3, sizeof(prompt3), 3);
+    }
 void pass(){
     static const int BIGSTRING_SIZE = 408;
 
@@ -246,13 +254,7 @@ void pass(){
     }
     
     /* Intro text */
-    char prompt[] = "ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL";
-    passPrint(prompt,sizeof(prompt),0);
-    
-    char prompt2[] = "ENTER PASSWORD NOW";
-    passPrint(prompt2, sizeof(prompt2), 1);
-    char prompt3[] = "4 ATTEMPT(S) LEFT: * * * *";
-    passPrint(prompt3, sizeof(prompt3), 3);
+    printPasswordScreenIntro();
     
     /* Generate the hex values on the left sides */
     int arbHex;
@@ -273,7 +275,7 @@ void pass(){
     char filename[] = "passwords5.txt"; 
     int WORD_POOL_SIZE = 0;
     int WORD_SIZE = 5;
-    char** passwordList = ReadPasswords(filename, &WORD_POOL_SIZE) ;
+    char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
     static const int WORDS_CHOSEN = 15; 
     //file_write_module passwordList, WORD_POOL_SIZE);
     //char** passwordList = PasswordFileReader("passwords5");
