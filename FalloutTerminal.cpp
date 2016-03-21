@@ -250,7 +250,7 @@ void StartNewScreenNodelayFalse(){
         attron(COLOR_PAIR(1));
     }
 }
-char * GenerateHoldBracketsString(int BIGSTRING_SIZE){ // rename it GenBinTrash 
+char * GenBinTrash(int BIGSTRING_SIZE){ // rename it GenBinTrash 
     char * bigString = (char *)malloc(BIGSTRING_SIZE * sizeof(char) + 1); // keep attention with +1;
     char randValues[] = "!@#$^*()_-=+\\|/[]{}?\"\':;,.<>";
     int i;
@@ -261,43 +261,15 @@ char * GenerateHoldBracketsString(int BIGSTRING_SIZE){ // rename it GenBinTrash
     bigString[BIGSTRING_SIZE] = '\0'; 
     return bigString;
 }
-
-void pass(){
-    static const int BIGSTRING_SIZE = 408;
-
-
-    /* Start a new screen where nodelay is false */
-    StartNewScreenNodelayFalse();
-    
-    /* Intro text */
-    printPasswordScreenIntro();
-    
-    /* Generate the hex values on the left sides */
-    int arbHex;
-    arbHex = (rand() % 200) + 63744;
-
-
- 
-    /* Generate the string to hold the bracket tricks and words */
-    char * bigString  = GenerateHoldBracketsString(BIGSTRING_SIZE);
-
-    /* Words from http://www-01.sil.org/linguistics/wordlists/english/wordlist/wordsEn.txt */
-    char filename[] = "passwords5.txt"; 
-    int WORD_POOL_SIZE = 0;
-    int WORD_SIZE = 5;
-    char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
-    static const int WORDS_CHOSEN = 15; 
-    int i;//attention
-    /* Place a word in the string total times, making sure it doesn't 
-       overwrite another word or get placed right next to it */
+void GenPasswods(char ** passwordList, char * correctWord, char * bigString, int BIGSTRING_SIZE, int WORD_SIZE, int WORD_POOL_SIZE, int WORDS_CHOSEN){
     int place;                      /* Current place for checking and word insertion*/
     int takenWords[WORDS_CHOSEN];   /* Words already placed in bigString */
     int valid;                      /* 1 if selected word is not already used and 
                                        does not conflict with other words, 0 otherwise */
     int pickedWord = 0;             /* Indicate whether or not we've chosen the correct word */
     int left = WORDS_CHOSEN;        /* # of words that still need to be chosen */
-    char correctWord[WORD_SIZE];    /* the correct word */
-    while(left>0){ // used: valid n , BIGSTRING_SIZE , WORD SIZE , plase n 
+    int i;
+    while(left>0){ // pointer to: passwordList , correctWord, bigString ; BIGSTRSIZE,WRDSIZE,WORD_POOL SIZE, WORD_CHOSEN,  
         valid = 1; 
         
         /* Choose a random place in bigString */
@@ -335,7 +307,84 @@ void pass(){
             }
         }
     }
+}
+
+
+void pass(){
+    static const int BIGSTRING_SIZE = 408;
+
+
+    /* Start a new screen where nodelay is false */
+    StartNewScreenNodelayFalse();
     
+    /* Intro text */
+    printPasswordScreenIntro();
+    
+    /* Generate the hex values on the left sides */
+    int arbHex;
+    arbHex = (rand() % 200) + 63744;
+
+
+ 
+    /* Generate the string to hold the bracket tricks and words */
+    char * bigString  = GenBinTrash(BIGSTRING_SIZE);
+
+    /* Words from http://www-01.sil.org/linguistics/wordlists/english/wordlist/wordsEn.txt */
+    char filename[] = "passwords5.txt"; 
+    int WORD_POOL_SIZE = 0;
+    int WORD_SIZE = 5;
+    char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
+    static const int WORDS_CHOSEN = 15; 
+    int i;//attention
+    /* Place a word in the string total times, making sure it doesn't 
+       overwrite another word or get placed right next to it */
+    //int place;                      /* Current place for checking and word insertion*/
+    //int takenWords[WORDS_CHOSEN];   /* Words already placed in bigString */
+    //int valid;                      /* 1 if selected word is not already used and 
+     //                                  does not conflict with other words, 0 otherwise */
+    //int pickedWord = 0;             /* Indicate whether or not we've chosen the correct word */
+    //int left = WORDS_CHOSEN;        /* # of words that still need to be chosen */
+    char correctWord[WORD_SIZE];    /* the correct word */
+    GenPasswods(passwordList, correctWord, bigString, BIGSTRING_SIZE, WORD_SIZE, WORD_POOL_SIZE, WORDS_CHOSEN);
+    /*while(left>0){ // pointer to: passwordList , correctWord, bigString ; BIGSTRSIZE,WRDSIZE,WORD_POOL SIZE, WORD_CHOSEN,  
+        valid = 1; 
+        
+        *//* Choose a random place in bigString *//*
+        place = rand()%(BIGSTRING_SIZE-WORD_SIZE);*/
+        
+        /* Check of any characters there or around it are A-Z */
+        /*for(i=place-1; i<place+WORD_SIZE+1; i++){
+            if(bigString[i] > 64 && bigString[i] < 91){
+                valid = 0;
+            }
+        }
+
+
+        if(valid){
+            int wordLoc = rand()%WORD_POOL_SIZE;
+            
+            *//* Check if the word selected has already been selected */
+            /*for(i=0;i<=WORDS_CHOSEN-left;i++)
+            {
+                if(wordLoc == takenWords[i])
+                    valid = 0;
+            }
+
+            if(valid){
+
+                *//* Add the word to bigString */
+                /*for(i=place; i<place+WORD_SIZE; i++){
+                    bigString[i] = passwordList[wordLoc][i-place];
+                    *//* If this is the first word chosen, it is the correct word. */ 
+                    /*if(!pickedWord)
+                        correctWord[i-place] = passwordList[wordLoc][i-place];
+                }
+                pickedWord = 1;
+                left--;
+            }
+        }
+    }
+    */
     
     /* Create and fill an array to keep track of which brackets were used */
     int usedBrackets[BIGSTRING_SIZE];
