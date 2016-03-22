@@ -308,49 +308,16 @@ void GenPasswods(char ** passwordList, char * correctWord, char * bigString, int
         }
     }
 }
-
-
-void pass(){
-    static const int BIGSTRING_SIZE = 408;
-
-
-    /* Start a new screen where nodelay is false */
-    StartNewScreenNodelayFalse();
-    
-    /* Intro text */
-    printPasswordScreenIntro();
-    
-    /* Generate the hex values on the left sides */
+void PrintGeneratedScreen(char * bigString){
+        /* Generate the hex values on the left sides */
     int arbHex;
     arbHex = (rand() % 200) + 63744;
 
-
- 
-    /* Generate the string to hold the bracket tricks and words */
-    char * bigString  = GenBinTrash(BIGSTRING_SIZE); 
-
-    /* Words from http://www-01.sil.org/linguistics/wordlists/english/wordlist/wordsEn.txt */
-    char filename[] = "passwords5.txt"; 
-    int WORD_POOL_SIZE = 0;
-    int WORD_SIZE = 5;
-    char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
-    static const int WORDS_CHOSEN = 15; 
-    int i;//attention
-    
-    char correctWord[WORD_SIZE];    /* the correct word */
-    GenPasswods(passwordList, correctWord, bigString, BIGSTRING_SIZE, WORD_SIZE, WORD_POOL_SIZE, WORDS_CHOSEN);
-
-    /* Create and fill an array to keep track of which brackets were used */
-    int usedBrackets[BIGSTRING_SIZE];
-    for(i=0; i<BIGSTRING_SIZE; i++){
-        usedBrackets[i] = 1;
-    }
-    
-    
-    /* Print the hex and the filled bigString */
+        /* Print the hex and the filled bigString */
     char temp[12];  
     int current = 0;
     int j = 0;
+    int i = 0;
     for(i=5; i<22; i++){
         /* Print left side */
         for(j=0; j<12; j++){
@@ -371,8 +338,44 @@ void pass(){
         current = current + 12;
         arbHex = arbHex + 12;
     }
-    j = 0;
+
+} 
+
+
+void pass(){
+    static const int BIGSTRING_SIZE = 408;
+    int WORD_POOL_SIZE = 0;
+    int WORD_SIZE = 5;
+    static const int WORDS_CHOSEN = 15; 
+    /* Start a new screen where nodelay is false */
+    StartNewScreenNodelayFalse();
     
+    /* Intro text */
+    printPasswordScreenIntro();
+    
+    /* Generate the string to hold the bracket tricks and words */
+    char * bigString  = GenBinTrash(BIGSTRING_SIZE); 
+
+    /* Words from http://www-01.sil.org/linguistics/wordlists/english/wordlist/wordsEn.txt */
+    char filename[] = "passwords5.txt"; 
+
+    char** passwordList = ReadPasswordsFromFile(filename, &WORD_POOL_SIZE) ;
+
+
+
+    char correctWord[WORD_SIZE];    /* the correct word */
+    GenPasswods(passwordList, correctWord, bigString, BIGSTRING_SIZE, WORD_SIZE, WORD_POOL_SIZE, WORDS_CHOSEN);
+
+    /* Create and fill an array to keep track of which brackets were used */
+    int i;
+    int usedBrackets[BIGSTRING_SIZE];
+    for(i=0; i<BIGSTRING_SIZE; i++){
+        usedBrackets[i] = 1;
+    }
+    
+    PrintGeneratedScreen(bigString);
+
+    // attention//
     mvprintw(21,40,"%c",'>');
     move(5,7);
     char currentChar[12]; /* Max length chrrentChar could be (total possible length of a bracket trick) */
