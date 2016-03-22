@@ -340,7 +340,42 @@ void PrintGeneratedScreen(char * bigString){
     }
 
 } 
-
+void CheckAttempts( int attemptsAmount){
+    mvprintw(1,0,"                                 ");
+    mvprintw(3,0,"                              "); // NEED TOO ANDERSTUD WHY WE NEED THIS SPACES
+    switch(attemptsAmount){
+        case 1: 
+            mvprintw(3,0,"1 ATTEMPT(S) LEFT: *");
+            attron(A_BLINK);
+            mvprintw(1,0,"!!! WARNING: LOCKOUT IMNINENT !!!");
+            attroff(A_BLINK);
+            attron(A_BOLD);
+            break;
+        case 2: 
+            mvprintw(3,0,"2 ATTEMPT(S) LEFT: * *");
+            mvprintw(1,0,"ENTER PASSWORD NOW");
+            break;
+        case 3: 
+            mvprintw(3,0,"3 ATTEMPT(S) LEFT: * * *");
+            mvprintw(1,0,"ENTER PASSWORD NOW");
+            break;
+        case 4: 
+            mvprintw(3,0,"4 ATTEMPT(S) LEFT: * * * *");
+            mvprintw(1,0,"ENTER PASSWORD NOW");
+            break;
+        case 0: 
+            clear();
+            /*mvprintw(getmaxx(stdscr)/2,getmaxy(stdscr)/2,"TERMINAL LOCKED");
+            mvprintw(getmaxx(stdscr)/2 + 2,getmaxy(stdscr)/2 + 2,"PLEASE CONTACT AN ADMINISTRATOR");*/
+            mvprintw(10,20,"TERMINAL LOCKED");
+            mvprintw(12,12,"PLEASE CONTACT AN ADMINISTRATOR");
+            refresh();
+            getch(); //AUTHOR ERR  PATH AT THE NEXT LINE
+            endwin(); // 
+            exit(0);
+    }
+    refresh();
+}
 
 void pass(){
     static const int BIGSTRING_SIZE = 408;
@@ -394,41 +429,13 @@ void pass(){
     int needsClearing = 0;              /* Whether or not highlights need to be purged */
     int needsClearingMultiLine = 0;     /* Whether or not a multi line highlight needs to be purged */
     char output[12];                    /* Used for side terminal output */
-    int allowances = 4;
+    int attemptsAmount = 4;
     
     while(1){
         getyx(stdscr,y,x);
         
-        /* Get allowances left */
-        mvprintw(1,0,"                                 ");
-        mvprintw(3,0,"                              ");
-        switch(allowances){
-            case 1: mvprintw(3,0,"1 ATTEMPT(S) LEFT: *");
-                    attron(A_BLINK);
-                    mvprintw(1,0,"!!! WARNING: LOCKOUT IMNINENT !!!");
-                    attroff(A_BLINK);
-                    attron(A_BOLD);
-                    break;
-            case 2: mvprintw(3,0,"2 ATTEMPT(S) LEFT: * *");
-                    mvprintw(1,0,"ENTER PASSWORD NOW");
-                    break;
-            case 3: mvprintw(3,0,"3 ATTEMPT(S) LEFT: * * *");
-                    mvprintw(1,0,"ENTER PASSWORD NOW");
-                    break;
-            case 4: mvprintw(3,0,"4 ATTEMPT(S) LEFT: * * * *");
-                    mvprintw(1,0,"ENTER PASSWORD NOW");
-                    break;
-            case 0: clear();
-                    /*mvprintw(getmaxx(stdscr)/2,getmaxy(stdscr)/2,"TERMINAL LOCKED");
-                    mvprintw(getmaxx(stdscr)/2 + 2,getmaxy(stdscr)/2 + 2,"PLEASE CONTACT AN ADMINISTRATOR");*/
-                    mvprintw(10,20,"TERMINAL LOCKED");
-                    mvprintw(12,12,"PLEASE CONTACT AN ADMINISTRATOR");
-                    refresh();
-                    getch(); //AUTHOR ERR  PATH AT THE NEXT LINE
-                    endwin(); // 
-                    exit(0);
-        }
-        refresh();
+        /* Get attemptsAmount left */
+        CheckAttempts(attemptsAmount);
         move(y,x);
         /* Check if highlights need to be purged */
         if(needsClearing){
@@ -616,7 +623,7 @@ void pass(){
                     for(i=0;i<12;i++){
                         mvprintw(19,41+i,"%c",output[i]);
                     }
-                    allowances = 4;
+                    attemptsAmount = 4;
                 }
                 else{
                     /* Remove a dud */
@@ -731,7 +738,7 @@ void pass(){
                     for(i=0;i<12;i++){
                         mvprintw(19,41+i,"%c",output[i]);
                     }
-                    allowances--;
+                    attemptsAmount--;
                 }
             }
             move(y,x);
