@@ -376,6 +376,78 @@ void CheckAttempts( int attemptsAmount){
     }
     refresh();
 }
+/*void CleanHighLights(int & needsClearing , int & charCounter, int & bracketLength, char * currentChar, int & origy, int & origx, int & y, int & x , int & charStart){
+    if(needsClearing){
+        charCounter = 0;
+        while(charCounter != bracketLength + 1){
+            currentChar[charCounter] = mvinch(origy,charStart+charCounter);
+            mvprintw(origy,charStart+charCounter,"%c",(int)currentChar[charCounter]);
+            charCounter++;
+        }
+        mvprintw(21,41,"            ",currentChar[0]);
+        needsClearing = 0;
+        move(y,origx);
+    }
+
+}*/
+int  checkSelectedPassword(char * currentChar,char * correctWord, char * output, int WORD_SIZE , int attemptsAmount){
+    int i = 0;
+    int rightLetters = WORD_SIZE;
+                for(i=0;i<WORD_SIZE; i++){
+                    if(currentChar[i]!=correctWord[i])
+                        rightLetters--;
+                }
+                if(rightLetters==WORD_SIZE){
+                    mvprintw(15,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(15,41+i,"%c",currentChar[i]);
+                    }
+                    sprintf(output,"Exact match!");
+                    mvprintw(16,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(16,41+i,"%c",output[i]);
+                    }
+                    sprintf(output,"Please wait ");
+                    mvprintw(17,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(17,41+i,"%c",output[i]);
+                    }
+                    sprintf(output,"while system");
+                    mvprintw(18,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(18,41+i,"%c",output[i]);
+                    }
+                    sprintf(output,"is accessed.");
+                    mvprintw(19,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(19,41+i,"%c",output[i]);
+                    }
+                    refresh();
+                    SLEEP(3000000);
+                    endwin();
+                    exit(0);
+                    
+                }
+                else{
+                    mvprintw(17,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(17,41+i,"%c",currentChar[i]);
+                    }
+                    sprintf(output,"Entry denied");
+                    mvprintw(18,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(18,41+i,"%c",output[i]);
+                    }
+                    sprintf(output,"%d/%d correct.",rightLetters,WORD_SIZE);
+                    mvprintw(19,40,">");
+                    for(i=0;i<12;i++){
+                        mvprintw(19,41+i,"%c",output[i]);
+                    }
+                    attemptsAmount--;
+                }
+    return attemptsAmount;
+
+}
 
 void pass(){
     static const int BIGSTRING_SIZE = 408;
@@ -449,6 +521,7 @@ void pass(){
             needsClearing = 0;
             move(y,origx);
         }
+        //CleanHighLights(&needsClearing , &charCounter, &bracketLength, currentChar, &origx, &y, &x ,&origy, &charStart);
         if(needsClearingMultiLine){
             charCounter = 0;
             //int timesDown = 0;
@@ -687,59 +760,8 @@ void pass(){
             }
             /* Else compare it to the correct word */
             else{
-                int rightLetters = WORD_SIZE;
-                for(i=0;i<WORD_SIZE; i++){
-                    if(currentChar[i]!=correctWord[i])
-                        rightLetters--;
-                }
-                if(rightLetters==WORD_SIZE){
-                    mvprintw(15,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(15,41+i,"%c",currentChar[i]);
-                    }
-                    sprintf(output,"Exact match!");
-                    mvprintw(16,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(16,41+i,"%c",output[i]);
-                    }
-                    sprintf(output,"Please wait ");
-                    mvprintw(17,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(17,41+i,"%c",output[i]);
-                    }
-                    sprintf(output,"while system");
-                    mvprintw(18,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(18,41+i,"%c",output[i]);
-                    }
-                    sprintf(output,"is accessed.");
-                    mvprintw(19,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(19,41+i,"%c",output[i]);
-                    }
-                    refresh();
-                    SLEEP(3000000);
-                    endwin();
-                    exit(0);
-                    
-                }
-                else{
-                    mvprintw(17,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(17,41+i,"%c",currentChar[i]);
-                    }
-                    sprintf(output,"Entry denied");
-                    mvprintw(18,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(18,41+i,"%c",output[i]);
-                    }
-                    sprintf(output,"%d/%d correct.",rightLetters,WORD_SIZE);
-                    mvprintw(19,40,">");
-                    for(i=0;i<12;i++){
-                        mvprintw(19,41+i,"%c",output[i]);
-                    }
-                    attemptsAmount--;
-                }
+               attemptsAmount = checkSelectedPassword( currentChar, correctWord, output, WORD_SIZE , attemptsAmount);
+
             }
             move(y,x);
         }   
