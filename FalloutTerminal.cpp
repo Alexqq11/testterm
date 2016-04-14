@@ -38,8 +38,8 @@ int kbhit(){
 void pass();
 
 void slowPrint(char arr[], int size, int line){
-	int i = 0;
-	
+    int i = 0;
+    
     for(i=0; i<size; i++){  
         /* Print the current character in the current position. */
         mvprintw(line,i,"%c",arr[i]);
@@ -55,7 +55,7 @@ void slowPrint(char arr[], int size, int line){
 }
 int main();
 void slowType(char arr[], int size, int line){
-	int i = 0;
+    int i = 0;
     for(i=0; i<size; i++){  
         mvprintw(line,i+1,"%c",arr[i]);
         move(line, i+2);
@@ -679,6 +679,36 @@ void pass(){
         
         keyPress = getch();
         getyx(stdscr,y,x);
+        if (keyPress == '\033') { //красота кода? не-не, не слышал
+            getch(); // skip the [
+            switch(getch()) { // the real value
+                case 'A':
+                    if(y>5)
+                        move(y-1,x);
+                    break;
+                case 'B':
+                    if(y<21)
+                        move(y+1,x);
+                    break;
+                case 'C':
+                    if(x<38){
+                        if(x==18)
+                            move(y,27);
+                        else
+                            move(y,x+1);
+                    }
+                    break;
+                case 'D':
+                    if(x>7){
+                        if(x==27)
+                            move(y,18);
+                        else
+                            move(y,x-1);
+                    }
+                   break;
+                }
+            }
+
         if(keyPress=='w'){
             if(y>5)
                 move(y-1,x);
