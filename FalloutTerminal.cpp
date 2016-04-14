@@ -53,7 +53,7 @@ void slowPrint(char arr[], int size, int line){
         SLEEP(20000);
     }
 }
-
+int main();
 void slowType(char arr[], int size, int line){
 	int i = 0;
     for(i=0; i<size; i++){  
@@ -341,6 +341,8 @@ void PrintGeneratedScreen(char * bigString){
 
 } 
 void CheckAttempts( int attemptsAmount){
+    char a0,a1,a2,a3;
+
     mvprintw(1,0,"                                 ");
     mvprintw(3,0,"                              "); // NEED TOO ANDERSTUD WHY WE NEED THIS SPACES
     switch(attemptsAmount){
@@ -370,26 +372,44 @@ void CheckAttempts( int attemptsAmount){
             mvprintw(10,20,"TERMINAL LOCKED");
             mvprintw(12,12,"PLEASE CONTACT AN ADMINISTRATOR");
             refresh();
-            getch(); //AUTHOR ERR  PATH AT THE NEXT LINE
-            endwin(); // 
-            exit(0);
+            while(true){ 
+                a0=getch();
+                a1=getch();
+                a2=getch();
+                a3=getch();
+                if ((a0 == '8') && (a1 == '8') && a2 == '4' && a3 == '1' ){
+                   /* endwin();
+                    srand ( (unsigned)time(NULL) );
+                    initscr();
+                    noecho();
+                    refresh();
+                    attron(A_BOLD);
+                    nodelay(stdscr, 1);
+                    if(has_colors() == 1){
+                    
+                        start_color();
+                        init_pair(1,COLOR_GREEN,COLOR_BLACK);
+                        attron(COLOR_PAIR(1));
+                    }
+                    intro();
+                    pass();
+                    */
+                    clear();
+                    mvprintw(12,12,"POWER OFF");
+                    refresh();
+                    getch();
+                    main();
+
+                }
+                else if (a0 == '5' && a1 == '3' && a2 == '4' && a3 == '2'){ //AUTHOR ERR  PATH AT THE NEXT LINE
+                endwin(); // 
+                exit(0);
+            }
+        }
     }
     refresh();
 }
-/*void CleanHighLights(int & needsClearing , int & charCounter, int & bracketLength, char * currentChar, int & origy, int & origx, int & y, int & x , int & charStart){
-    if(needsClearing){
-        charCounter = 0;
-        while(charCounter != bracketLength + 1){
-            currentChar[charCounter] = mvinch(origy,charStart+charCounter);
-            mvprintw(origy,charStart+charCounter,"%c",(int)currentChar[charCounter]);
-            charCounter++;
-        }
-        mvprintw(21,41,"            ",currentChar[0]);
-        needsClearing = 0;
-        move(y,origx);
-    }
 
-}*/
 int  checkSelectedPassword(char * currentChar,char * correctWord, char * output, int WORD_SIZE , int attemptsAmount){
     int i = 0;
     int rightLetters = WORD_SIZE;
@@ -424,6 +444,17 @@ int  checkSelectedPassword(char * currentChar,char * correctWord, char * output,
                     }
                     refresh();
                     SLEEP(3000000);
+                    clear();
+                    /*mvprintw(getmaxx(stdscr)/2,getmaxy(stdscr)/2,"TERMINAL LOCKED");
+                     mvprintw(getmaxx(stdscr)/2 + 2,getmaxy(stdscr)/2 + 2,"PLEASE CONTACT AN ADMINISTRATOR");*/
+                    mvprintw(12,12,"FLAG IS: RUCTF_HAVE_A_FUN");
+                    refresh();
+                    getch();
+                    clear();
+                    mvprintw(12,12,"POWER OFF");
+                    refresh();
+                    getch();
+                    main();
                     endwin();
                     exit(0);
                     
@@ -446,7 +477,6 @@ int  checkSelectedPassword(char * currentChar,char * correctWord, char * output,
                     attemptsAmount--;
                 }
     return attemptsAmount;
-
 }
 
 void pass(){
@@ -546,6 +576,9 @@ void pass(){
         /* Set the new y and x to origy and origx */
         origy = y;
         origx = x;
+
+
+
         /* Check for bracket tricks */
         if((currentChar[0]=='(' || currentChar[0]=='<' || currentChar[0]=='[' || currentChar[0]=='{') && usedBrackets[getCharLoc(y,x)] && bracketTricks<WORDS_CHOSEN){
             charStart = x;
@@ -584,6 +617,8 @@ void pass(){
                 mvprintw(21,41,"%c",currentChar[0]);
             }
         }
+
+
         /* Check for letters */
         else if(currentChar[0]>64 && currentChar[0]<91){
             /* Check for letter behind the current location */
@@ -684,7 +719,7 @@ void pass(){
                 usedBrackets[getCharLoc(y,x)] = 0;
                 /* Increment total bracket tricks used */
                 bracketTricks++;
-                if(rand()%5==0){
+                if(rand()%2==0){ // somethink  interesting it was 5
                     /* 20% chance of allowance replenish */
                     sprintf(output,"Allowance   ");
                     mvprintw(18,40,">");
